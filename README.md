@@ -1,7 +1,7 @@
 # vilokanam-view
 
 <p align="center">
-  <img src="./docs/logo-vilokanam-view.png" alt="vilokanam-view logo" width="120"/>
+  <img src="./Docs/logo-vilokanam-view.png" alt="vilokanam-view logo" width="120"/>
 </p>
 
 <p align="center">
