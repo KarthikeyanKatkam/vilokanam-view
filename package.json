@@ -1,0 +1,42 @@
+{
+  "name": "vilokanam-view",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r   <img src=\"./docs/logo-vilokanam-view.png\" alt=\"vilokanam-view logo\" width=\"120\"/>\r </p>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KarthikeyanKatkam/vilokanam-view.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KarthikeyanKatkam/vilokanam-view/issues"
+  },
+  "homepage": "https://github.com/KarthikeyanKatkam/vilokanam-view#readme",
+  "dependencies": {
+    "@polkadot/api": "^16.4.6",
+    "@polkadot/extension-dapp": "^0.61.7",
+    "@polkadot/types": "^16.4.6",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "autoprefixer": "^10.4.21",
+    "big-integer": "^1.6.52",
+    "cssnano": "^7.1.1",
+    "postcss": "^8.5.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "rollup": "^4.50.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "simple-peer": "^9.11.1",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2"
+  }
+}
