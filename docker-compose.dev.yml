@@ -36,35 +36,20 @@ services:
 
   # Signaling server for WebRTC
   signaling:
-    image: node:18-alpine
-    working_dir: /app
-    volumes:
-      - ./signaling-server:/app
+    build:
+      context: ./signaling-server
     ports:
       - "8080:8080"
     networks:
       - vilokanam-network
-    command: sh -c "npm install && node index.js"
-
-  # Media server for WebRTC
-  media-server:
-    image: node:18-alpine
-    working_dir: /app
     volumes:
-      - ./media-server:/app
-    ports:
-      - "3000:3000"
-      - "20000-21000:20000-21000/udp"
-    networks:
-      - vilokanam-network
-    command: sh -c "npm install && node index.js"
+      - ./signaling-server:/app
+      - /app/node_modules
 
   # API server
   api:
-    image: node:18-alpine
-    working_dir: /app
-    volumes:
-      - ./backend/api:/app
+    build:
+      context: ./backend/api
     ports:
       - "3001:3001"
     networks:
@@ -72,7 +57,9 @@ services:
     depends_on:
       - postgres
       - redis
-    command: sh -c "npm install && node index.js"
+    volumes:
+      - ./backend/api:/app
+      - /app/node_modules
 
 volumes:
   postgres_data:

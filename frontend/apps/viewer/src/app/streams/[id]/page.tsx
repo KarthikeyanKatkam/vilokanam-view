@@ -1,20 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header, WebRTCViewer, ChatMessage, Button } from 'ui';
+import { getStreamInfo } from 'sdk';
 
 // Mock chat messages
 const mockChatMessages = [
   { id: '1', user: 'Viewer123', message: 'Great stream!', time: '12:45', isOwn: false },
-  { id: '2', creator: 'CodeMaster', message: 'Thanks for watching!', time: '12:46', isOwn: true },
+  { id: '2', user: 'CodeMaster', message: 'Thanks for watching!', time: '12:46', isOwn: true },
   { id: '3', user: 'DevFan', message: 'Can you explain that pattern again?', time: '12:47', isOwn: false },
-  { id: '4', creator: 'CodeMaster', message: 'Sure! Let me go back and explain...', time: '12:48', isOwn: true },
+  { id: '4', user: 'CodeMaster', message: 'Sure! Let me go back and explain...', time: '12:48', isOwn: true },
 ];
 
 export default function StreamViewPage({ params }: { params: { id: string } }) {
   const [chatMessages] = useState(mockChatMessages);
   const [newMessage, setNewMessage] = useState('');
+  const [streamInfo, setStreamInfo] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const streamId = params.id;
+
+  // Fetch stream info
+  useEffect(() => {
+    const fetchStreamInfo = async () => {
+      try {
+        setLoading(true);
+        const info = await getStreamInfo(streamId);
+        setStreamInfo(info);
+      } catch (error) {
+        console.error('Error fetching stream info:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStreamInfo();
+  }, [streamId]);
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
@@ -28,6 +48,31 @@ export default function StreamViewPage({ params }: { params: { id: string } }) {
       <Header />
       
       <div className="container mx-auto px-4 py-8">
+        {/* Stream Header */}
+        {loading ? (
+          <div className="mb-6">
+            <p className="text-gray-600">Loading stream information...</p>
+          </div>
+        ) : streamInfo ? (
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold">{streamInfo.title}</h1>
+            <div className="flex items-center mt-2">
+              <span className="font-medium">{streamInfo.creator}</span>
+              <span className="mx-2">•</span>
+              <span className="text-gray-600">{streamInfo.viewerCount} viewers</span>
+              <span className="mx-2">•</span>
+              <span className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                LIVE
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold">Stream Not Found</h1>
+            <p className="text-gray-600">The stream you're looking for doesn't exist or is no longer available.</p>
+          </div>
+        )}
+        
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Stream Area */}
           <div className="lg:col-span-3">
@@ -45,7 +90,7 @@ export default function StreamViewPage({ params }: { params: { id: string } }) {
                 {chatMessages.map((msg) => (
                   <ChatMessage
                     key={msg.id}
-                    user={msg.user || msg.creator}
+                    user={msg.user}
                     message={msg.message}
                     time={msg.time}
                     isOwn={msg.isOwn}

@@ -89,3 +89,9 @@ export const recordTick = async (streamId: string, viewer: string, ticks: number
 
 // Re-export streaming functions
 export * from './streaming';
+
+// Re-export API functions
+export * from './api';
+
+// Re-export signaling client
+export * from './signaling';

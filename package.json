@@ -4,7 +4,9 @@
   "description": "<p align=\"center\">\r   <img src=\"./docs/logo-vilokanam-view.png\" alt=\"vilokanam-view logo\" width=\"120\"/>\r </p>",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Running tests...\" && cd frontend && npm test",
+    "dev": "echo \"Starting development environment...\" && docker-compose -f docker-compose.dev.yml up -d",
+    "setup": "sh setup-dev.sh"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,7 @@
     "@polkadot/types": "^16.4.6",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
+    "@types/jest": "^29.5.2",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "autoprefixer": "^10.4.21",

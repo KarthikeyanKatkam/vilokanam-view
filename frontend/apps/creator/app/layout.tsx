@@ -1,4 +1,4 @@
-import { Header } from 'ui';
+import 'ui/globals.css';
 
 export const metadata = {
   title: 'Vilokanam Creator Dashboard',
@@ -12,7 +12,7 @@ export default function CreatorLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-gray-50">
+      <body className="min-h-screen bg-[#0e0e10]">
         {children}
       </body>
     </html>

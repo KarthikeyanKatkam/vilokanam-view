@@ -7,19 +7,22 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "sdk": ["../sdk/src"],
-      "ui": ["./src"]
+      "sdk": ["packages/sdk/src"],
+      "ui": ["packages/ui/src"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "packages/*/src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "references": [
+    { "path": "packages/sdk" },
+    { "path": "packages/ui" }
+  ]
 }

@@ -63,13 +63,13 @@ export default function CreatorDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#0e0e10]">
       <CreatorHeader />
       
       <div className="container mx-auto px-4 py-8">
         {/* Dashboard Header */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Creator Dashboard</h1>
+          <h1 className="text-3xl font-bold text-white">Creator Dashboard</h1>
           <Button variant={isStreaming ? "danger" : "primary"} onClick={() => setIsStreaming(!isStreaming)}>
             {isStreaming ? 'End Stream' : 'Go Live'}
           </Button>
@@ -117,24 +117,24 @@ export default function CreatorDashboard() {
           <div className="lg:col-span-2">
             <Card className="mb-8">
               <CardHeader>
-                <CardTitle>Stream Controls</CardTitle>
+                <CardTitle className="text-white">Stream Controls</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Stream Title</label>
+                    <label className="block text-sm font-medium text-[#adadb8] mb-1">Stream Title</label>
                     <input
                       type="text"
                       value={streamTitle}
                       onChange={(e) => setStreamTitle(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 border border-[#262626] bg-[#1f1f23] rounded-md focus:outline-none focus:ring-2 focus:ring-[#8b5cf6] text-white"
                     />
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                      <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                      <label className="block text-sm font-medium text-[#adadb8] mb-1">Category</label>
+                      <select className="w-full px-3 py-2 border border-[#262626] bg-[#1f1f23] rounded-md focus:outline-none focus:ring-2 focus:ring-[#8b5cf6] text-white">
                         <option>Programming</option>
                         <option>Gaming</option>
                         <option>Music</option>
@@ -143,13 +143,13 @@ export default function CreatorDashboard() {
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Stream Key</label>
+                      <label className="block text-sm font-medium text-[#adadb8] mb-1">Stream Key</label>
                       <div className="flex">
                         <input
                           type="password"
                           value="rtmp-key-12345"
                           readOnly
-                          className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="flex-grow px-3 py-2 border border-[#262626] bg-[#1f1f23] rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#8b5cf6] text-white"
                         />
                         <Button variant="outline" className="rounded-l-none">Copy</Button>
                       </div>
@@ -168,11 +168,12 @@ export default function CreatorDashboard() {
             {/* WebRTC Broadcaster */}
             <Card className="mb-8">
               <CardHeader>
-                <CardTitle>Live Broadcast</CardTitle>
+                <CardTitle className="text-white">Live Broadcast</CardTitle>
               </CardHeader>
               <CardContent>
                 <WebRTCBroadcaster 
                   streamKey="rtmp-key-12345"
+                  streamId="1"
                   onStreamStart={handleStreamStart}
                   onStreamStop={handleStreamStop}
                 />
@@ -182,32 +183,32 @@ export default function CreatorDashboard() {
             {/* Recent Streams */}
             <Card>
               <CardHeader>
-                <CardTitle>Recent Streams</CardTitle>
+                <CardTitle className="text-white">Recent Streams</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
+                  <table className="min-w-full divide-y divide-[#262626]">
+                    <thead className="bg-[#1f1f23]">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Viewers</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Earnings</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-[#adadb8] uppercase tracking-wider">Title</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-[#adadb8] uppercase tracking-wider">Viewers</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-[#adadb8] uppercase tracking-wider">Duration</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-[#adadb8] uppercase tracking-wider">Earnings</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-[#1f1f23] divide-y divide-[#262626]">
                       {mockRecentStreams.map((stream) => (
                         <tr key={stream.id}>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">{stream.title}</div>
+                            <div className="text-sm font-medium text-white">{stream.title}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{stream.viewers}</div>
+                            <div className="text-sm text-[#adadb8]">{stream.viewers}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-[#adadb8]">
                             {stream.duration}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-[#adadb8]">
                             {stream.earnings.toFixed(2)} DOT
                           </td>
                         </tr>
@@ -223,7 +224,7 @@ export default function CreatorDashboard() {
           <div>
             <Card className="h-full flex flex-col">
               <CardHeader>
-                <CardTitle>Live Chat</CardTitle>
+                <CardTitle className="text-white">Live Chat</CardTitle>
               </CardHeader>
               <CardContent className="flex-grow flex flex-col">
                 <div className="flex-grow overflow-y-auto mb-4 pr-2">
@@ -244,7 +245,7 @@ export default function CreatorDashboard() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder="Type your message..."
-                    className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-grow px-3 py-2 border border-[#262626] bg-[#1f1f23] rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#8b5cf6] text-white"
                   />
                   <Button 
                     onClick={handleSendMessage}

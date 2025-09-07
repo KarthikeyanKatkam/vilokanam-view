@@ -7,6 +7,8 @@
  * for the Vilokanam-view platform.
  */
 
+import { getLiveStreams as apiGetLiveStreams, getStreamInfo as apiGetStreamInfo } from './api';
+
 // Type definitions
 export interface StreamInfo {
   id: string;
@@ -24,65 +26,100 @@ export interface DeviceInfo {
   kind: 'videoinput' | 'audioinput';
 }
 
-// Mock data for demonstration
-const mockStreams: StreamInfo[] = [
-  {
-    id: '1',
-    title: 'Learning Rust Programming',
-    creator: 'CodeMaster',
-    viewerCount: 1240,
-    category: 'Programming',
-    isLive: true,
-  },
-  {
-    id: '2',
-    title: 'Cooking Italian Pasta',
-    creator: 'ChefMaria',
-    viewerCount: 856,
-    category: 'Cooking',
-    isLive: true,
-  },
-  {
-    id: '3',
-    title: 'Gaming Adventure - New World',
-    creator: 'GameHero',
-    viewerCount: 3240,
-    category: 'Gaming',
-    isLive: true,
-  },
-  {
-    id: '4',
-    title: 'Music Production Session',
-    creator: 'DJBeats',
-    viewerCount: 560,
-    category: 'Music',
-    isLive: true,
-  },
-];
-
 /**
  * Get a list of all live streams
  */
 export const getLiveStreams = async (): Promise<StreamInfo[]> => {
-  // In a real implementation, this would fetch from an API
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockStreams);
-    }, 500);
-  });
+  try {
+    const streams = await apiGetLiveStreams();
+    return streams;
+  } catch (error) {
+    console.error('Error fetching streams, using mock data:', error);
+    // Fallback to mock data if API fails
+    return [
+      {
+        id: '1',
+        title: 'Learning Rust Programming',
+        creator: 'CodeMaster',
+        viewerCount: 1240,
+        category: 'Programming',
+        isLive: true,
+      },
+      {
+        id: '2',
+        title: 'Cooking Italian Pasta',
+        creator: 'ChefMaria',
+        viewerCount: 856,
+        category: 'Cooking',
+        isLive: true,
+      },
+      {
+        id: '3',
+        title: 'Gaming Adventure - New World',
+        creator: 'GameHero',
+        viewerCount: 3240,
+        category: 'Gaming',
+        isLive: true,
+      },
+      {
+        id: '4',
+        title: 'Music Production Session',
+        creator: 'DJBeats',
+        viewerCount: 560,
+        category: 'Music',
+        isLive: true,
+      },
+    ];
+  }
 };
 
 /**
  * Get information about a specific stream
  */
 export const getStreamInfo = async (streamId: string): Promise<StreamInfo | null> => {
-  // In a real implementation, this would fetch from an API
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const stream = mockStreams.find(s => s.id === streamId) || null;
-      resolve(stream);
-    }, 300);
-  });
+  try {
+    const stream = await apiGetStreamInfo(streamId);
+    return stream;
+  } catch (error) {
+    console.error('Error fetching stream info, using mock data:', error);
+    // Fallback to mock data if API fails
+    const mockStreams = [
+      {
+        id: '1',
+        title: 'Learning Rust Programming',
+        creator: 'CodeMaster',
+        viewerCount: 1240,
+        category: 'Programming',
+        isLive: true,
+      },
+      {
+        id: '2',
+        title: 'Cooking Italian Pasta',
+        creator: 'ChefMaria',
+        viewerCount: 856,
+        category: 'Cooking',
+        isLive: true,
+      },
+      {
+        id: '3',
+        title: 'Gaming Adventure - New World',
+        creator: 'GameHero',
+        viewerCount: 3240,
+        category: 'Gaming',
+        isLive: true,
+      },
+      {
+        id: '4',
+        title: 'Music Production Session',
+        creator: 'DJBeats',
+        viewerCount: 560,
+        category: 'Music',
+        isLive: true,
+      },
+    ];
+    
+    return mockStreams.find(s => s.id === streamId) || null;
+  }
 };
 
 /**
