@@ -1,16 +1,21 @@
 {
-  "name": "vilokanam-frontend",
+  "name": "vilokanam",
+  "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@8.15.0",
   "scripts": {
-    "dev": "pnpm --filter viewer dev",
-    "build": "pnpm -r build",
-    "lint": "pnpm -r lint"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "clean": "turbo clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "eslint": "^8",
-    "prettier": "^3",
-    "typescript": "^5"
+    "prettier": "^3.2.5",
+    "turbo": "^2.1.1",
+    "typescript": "^5.4.5"
+  },
+  "packageManager": "pnpm@9.10.0",
+  "engines": {
+    "node": ">=18"
   }
 }

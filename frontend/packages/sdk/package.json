@@ -1,20 +1,24 @@
 {
-  "name": "@vilokanam/sdk",
+  "name": "sdk",
   "version": "0.1.0",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "private": true,
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "lint": "eslint src --ext ts"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src/",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@polkadot/api": "^10.13.1",
-    "@polkadot/types": "^10.13.1"
+    "@polkadot/api": "^10.13.1"
   },
   "devDependencies": {
-    "tsup": "^8",
-    "typescript": "^5"
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4"
   }
 }

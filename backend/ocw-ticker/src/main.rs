@@ -1,56 +1,73 @@
-use anyhow::Result;
-use parity_scale_codec::Encode;
-use reqwest::Client;
-use serde_json::json;
-use std::time::Duration;
-use tokio::time::interval;
+use clap::Parser;
+use codec::Encode;
+use sp_core::{sr25519, Pair};
+use sp_runtime::MultiSignature;
+use subxt::{
+	config::substrate::BlakeTwo256,
+	rpc::RpcClient,
+	tx::{PairSigner, Payload},
+	utils::H256,
+	Config, OnlineClient, SubstrateConfig,
+};
+use tokio::time::{sleep, Duration};
 
-const NODE_RPC: &str = "http://localhost:9944";
+/// Simple CLI for sending tick transactions
+#[derive(Parser, Debug)]
+#[clap(author, version, about, long_about = None)]
+struct Args {
+	/// The URL of the Substrate node to connect to
+	#[clap(long, default_value = "ws://127.0.0.1:9944")]
+	url: String,
 
-/// hard-code Alice SS58 -> AccountId32 bytes
-fn alice_account_id() -> [u8; 32] {
-    hex::decode("d43593c715fdd31c61141abd04a99fd9022df873e99644ca1c6e5a5b6d1a8f95")
-        .unwrap()
-        .try_into()
-        .unwrap()
-}
+	/// The stream ID to send ticks for
+	#[clap(long, default_value = "1")]
+	stream_id: u128,
 
-/// SCALE encode: pallet_index = 40, call_index = 2, (stream_id, viewer, ticks)
-fn encode_tick(stream_id: u128, viewer: [u8; 32], ticks: u32) -> Vec<u8> {
-    let mut v = Vec::new();
-    v.push(40u8); // pallet
-    v.push(2u8);  // call
-    v.extend_from_slice(&stream_id.to_le_bytes());
-    v.extend_from_slice(&viewer);
-    v.extend_from_slice(&ticks.to_le_bytes());
-    v
+	/// The private key URI for the account to use
+	#[clap(long, default_value = "//Alice")]
+	private_key_uri: String,
+
+	/// The interval between ticks in seconds
+	#[clap(long, default_value = "1")]
+	interval: u64,
 }
 
 #[tokio::main]
-async fn main() -> Result<()> {
-    let client = Client::new();
-    let viewer = alice_account_id();
-    let stream_id = 1u128;
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+	let args = Args::parse();
 
-    println!("🕒 OCW ticker running → 1 tick / sec to stream {}", stream_id);
-    let mut intv = interval(Duration::from_millis(1000));
+	// Create a client to connect to the node
+	let client = OnlineClient::<SubstrateConfig>::from_url(&args.url).await?;
 
-    loop {
-        intv.tick().await;
-        let call_data = encode_tick(stream_id, viewer, 1);
-        let hex_call = hex::encode(call_data);
+	// Create a keypair from the private key URI
+	let pair = sr25519::Pair::from_string(&args.private_key_uri, None)?;
+	let signer = PairSigner::new(pair);
 
-        let payload = json!({
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "author_submitExtrinsic",
-            "params": [&hex_call],
-        });
+	// Get the account ID
+	let account_id = signer.account_id().clone();
 
-        if let Err(e) = client.post(NODE_RPC).json(&payload).send().await {
-            eprintln!("tick failed: {}", e);
-        } else {
-            print!(".");
-        }
-    }
+	println!("Sending ticks every {} seconds to stream {}...", args.interval, args.stream_id);
+
+	loop {
+		// Create the call data for the tick extrinsic
+		let call_data = (
+			40u8,  // pallet index
+			2u8,   // call index
+			args.stream_id,
+			account_id.encode(),
+			1u32,  // ticks
+		);
+
+		// Create the payload
+		let payload = Payload::new("TickStream", "record_tick", call_data);
+
+		// Submit the transaction
+		match client.tx().sign_and_submit_then_watch_default(&payload, &signer).await {
+			Ok(_) => println!("Tick sent for stream {}", args.stream_id),
+			Err(e) => println!("Error sending tick: {}", e),
+		}
+
+		// Wait for the specified interval
+		sleep(Duration::from_secs(args.interval)).await;
+	}
 }
