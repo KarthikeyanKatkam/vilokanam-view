@@ -48,8 +48,7 @@ export default function CreatorDashboard() {
             <div className="flex space-x-2">
               <Button 
                 onClick={createStream} 
-                disabled={isCreating}
-                className="flex-1"
+                className={`flex-1 ${isCreating ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {isCreating ? 'Creating...' : 'Create Stream'}
               </Button>
