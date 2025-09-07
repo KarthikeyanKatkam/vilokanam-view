@@ -1,58 +1,159 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-// Import from the local packages using workspace protocol
-import { useTickStream } from 'sdk';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 'ui';
+import { Header, StreamCard, Button } from 'ui';
+import { getLiveStreams } from 'sdk';
 
 export default function Home() {
-  const [streamId, setStreamId] = useState<string>('1');
-  const { tickCount, isConnected, error } = useTickStream(streamId);
+  const [streams, setStreams] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch featured streams
+  useEffect(() => {
+    const fetchStreams = async () => {
+      try {
+        setLoading(true);
+        const liveStreams = await getLiveStreams();
+        setStreams(liveStreams.slice(0, 4)); // Get first 4 streams as featured
+      } catch (error) {
+        console.error('Error fetching streams:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStreams();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <h1 className="text-3xl font-bold mb-6">Vilokanam Stream Viewer</h1>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
       
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Stream Information</CardTitle>
-          <CardDescription>View and monitor your stream</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4">
-            <label htmlFor="streamId" className="block text-sm font-medium text-gray-700 mb-1">
-              Stream ID
-            </label>
-            <input
-              type="text"
-              id="streamId"
-              value={streamId}
-              onChange={(e) => setStreamId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20 mb-12">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-5xl font-bold mb-6">The Future of Live Streaming</h1>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            Pay only for the time you watch with our revolutionary pay-per-second model. 
+            Support creators directly with transparent, real-time payments.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+              Start Watching
+            </Button>
+            <Button size="lg" variant="secondary">
+              Become a Creator
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4">
+        {/* Featured Streams */}
+        <section className="mb-16">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">Featured Live Streams</h2>
+            <a href="/streams" className="text-blue-600 hover:underline">View All Streams →</a>
           </div>
           
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Connection Status:</span>
-              <span className={isConnected ? "text-green-600" : "text-red-600"}>
-                {isConnected ? "Connected" : "Disconnected"}
-              </span>
+          {loading ? (
+            <div className="text-center py-8">
+              <p className="text-gray-600">Loading featured streams...</p>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Tick Count:</span>
-              <span className="font-mono">{tickCount}</span>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {streams.map(stream => (
+                <a key={stream.id} href={`/streams/${stream.id}`}>
+                  <StreamCard
+                    title={stream.title}
+                    creator={stream.creator}
+                    viewerCount={stream.viewerCount}
+                    category={stream.category}
+                    isLive={stream.isLive}
+                  />
+                </a>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* How It Works */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-center mb-12">How Vilokanam Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center p-6 bg-white rounded-lg shadow">
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-blue-600">1</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Find a Stream</h3>
+              <p className="text-gray-600">Browse our categories or search for your favorite creators and content.</p>
+            </div>
+            <div className="text-center p-6 bg-white rounded-lg shadow">
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-blue-600">2</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Start Watching</h3>
+              <p className="text-gray-600">Connect your wallet and begin watching. You only pay per second.</p>
+            </div>
+            <div className="text-center p-6 bg-white rounded-lg shadow">
+              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-blue-600">3</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Support Creators</h3>
+              <p className="text-gray-600">Your payment goes directly to the creator in real-time.</p>
             </div>
           </div>
-        </CardContent>
-        {error && (
-          <CardFooter>
-            <div className="p-3 bg-red-100 text-red-700 rounded-md">
-              Error: {error}
+        </section>
+
+        {/* Benefits */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-center mb-12">Why Choose Vilokanam?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="p-6 bg-white rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">For Viewers</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span>Pay only for time watched - no subscriptions</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span>Transparent pricing displayed upfront</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span>Directly support your favorite creators</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span>Ad-free viewing experience</span>
+                </li>
+              </ul>
             </div>
-          </CardFooter>
-        )}
-      </Card>
+            <div className="p-6 bg-white rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">For Creators</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span>Earn money for every second of content</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span>Direct payments with no intermediaries</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span>Global reach without geographic restrictions</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  <span>Real-time analytics and earnings tracking</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

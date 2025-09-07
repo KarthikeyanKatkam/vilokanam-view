@@ -86,3 +86,6 @@ export const recordTick = async (streamId: string, viewer: string, ticks: number
     throw new Error(err instanceof Error ? err.message : 'Unknown error');
   }
 };
+
+// Re-export streaming functions
+export * from './streaming';

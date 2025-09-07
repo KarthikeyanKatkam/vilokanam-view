@@ -1,19 +1,20 @@
-import './globals.css';
-import type { Metadata } from 'next';
+import { Header } from 'ui';
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Vilokanam Creator Dashboard',
-  description: 'Pay-per-second streaming creator dashboard',
+  description: 'Manage your live streams and interact with your audience',
 };
 
-export default function RootLayout({
+export default function CreatorLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-screen bg-gray-50">
+        {children}
+      </body>
     </html>
   );
 }
